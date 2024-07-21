@@ -5,16 +5,41 @@
 # The subclasses are required to override the magic method
 # that makes them sortable
 
+from dataclasses import dataclass
+from abc import ABC, abstractmethod
+
+@dataclass
 class Asset():
-    pass
-    
+    price: float
+
+    @abstractmethod
+    def __str__(self):
+       pass
 
 class Stock(Asset):
-    pass
+    company: str
+    ticker: str
 
+    def __str__(self):
+       return f"{self.ticker}: {self.company} -- ${self.price}"
+
+    def __lt__(self, value):
+        if not isinstance(value, Stock):
+            raise ValueError("Can't compare stock to a non-stock")
+        return self.price < value.price
 
 class Bond(Asset):
-    pass
+    duration: int
+    description: str
+    yieldamt: float
+
+    def __str__(self):
+       return f"{self.description}: {self.duration}yr : ${self.price} : {self.yieldamt}%"
+    
+    def __lt__(self, value):
+        if not isinstance(value, Bond):
+            raise ValueError("Can't compare stock to a non-stock")
+        return self.yieldamt < value.yieldamt
 
 # ~~~~~~~~~ TEST CODE ~~~~~~~~~
 stocks = [
@@ -41,6 +66,8 @@ bonds.sort()
 
 for stock in stocks:
    print(stock)
+
 print("-----------")
+
 for bond in bonds:
    print(bond)
