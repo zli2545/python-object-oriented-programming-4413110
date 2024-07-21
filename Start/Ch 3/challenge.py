@@ -22,8 +22,28 @@ class Stock(Asset):
         super().__init__(price)
         self.company = company
         self.ticker = ticker
-
-
+    
+    def __str__(self):
+        return f"{self.ticker}: {self.company} -- ${self.price}"
+    
+    def __ge__(self, value):
+        if not isinstance(value, Stock):
+            raise ValueError("Can't compare stock to a non-stock")
+        return (self.ticker == value.ticker and
+                self.company == value.company and
+                self.price == value.price)
+    
+    def __ge__(self, value):
+        if not isinstance(value, Stock):
+            raise ValueError("Can't compare stock to a non-stock")
+        return self.price >= value.price
+    
+    def __lt__(self, value):
+        if not isinstance(value, Stock):
+            raise ValueError("Can't compare stock to a non-stock")
+        return self.price < value.price
+    
+    
 class Bond(Asset):
     def __init__(self, price, description, duration, yieldamt):
         super().__init__(price)
@@ -31,7 +51,26 @@ class Bond(Asset):
         self.duration = duration
         self.yieldamt = yieldamt
 
-
+    def __str__(self):
+        return f"{self.description}: {self.duration}yr : ${self.price} : {self.yieldamt}%"
+    
+    def __eq__(self, value):
+        if not isinstance(value, Bond):
+            raise ValueError("Can't compare bond to a non-bond")
+        return (self.description == value.description and
+                self.duration == value.duration and
+                self.yieldamt == value.yieldamt)
+    
+    def __ge__(self, value):
+        if not isinstance(value, Bond):
+            raise ValueError("Can't compare bond to a non-bond")
+        return self.yieldamt >= value.yieldamt
+    
+    def __lt__(self, value):
+        if not isinstance(value, Bond):
+            raise ValueError("Can't compare bond to a non-bond")
+        return self.yieldamt < value.yieldamt
+    
 # ~~~~~~~~~ TEST CODE ~~~~~~~~~
 stocks = [
     Stock("MSFT", 342.0, "Microsoft Corp"),
